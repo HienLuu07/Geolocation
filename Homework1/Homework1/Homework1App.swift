@@ -1,6 +1,6 @@
 import SwiftUI
 @main
-struct Quiz1App: App {
+struct Homework1App: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
