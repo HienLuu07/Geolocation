@@ -6,22 +6,24 @@ struct ContentView: View {
         Double(n)
     }
     var body: some View {
-        VStack(spacing: 25) {
+        VStack(spacing: 20) {
             Text("Number Calculator")
                 .font(.largeTitle)
-                .fontWeight(.bold)
+                .bold()
             Text("Enter n:")
                 .font(.headline)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
-            TextField("Enter n", text: $n)
-                .keyboardType(.decimalPad)
+            TextField("Enter a number", text: $n)
                 .textFieldStyle(.roundedBorder)
+                .keyboardType(.numberPad)
                 .padding(.horizontal)
             // n^2
             Button {
                 if let number = number {
                     result = "Result: \(number * number)"
+                } else {
+                    result = "Please enter a valid number"
                 }
             } label: {
                 Text("Calculate n²")
@@ -36,6 +38,8 @@ struct ContentView: View {
             Button {
                 if let number = number {
                     result = "Result: \(number * number * number)"
+                } else {
+                    result = "Please enter a valid number"
                 }
             } label: {
                 Text("Calculate n³")
@@ -50,6 +54,8 @@ struct ContentView: View {
             Button {
                 if let number = number {
                     result = "Result: \(number * 2)"
+                } else {
+                    result = "Please enter a valid number"
                 }
             } label: {
                 Text("Double n")
@@ -62,10 +68,7 @@ struct ContentView: View {
             }
             // Result
             Text(result)
-                .font(.title2)
-                .fontWeight(.semibold)
-                .padding(.top, 10)
-
+                .font(.title3)
             Spacer()
         }
         .padding()
