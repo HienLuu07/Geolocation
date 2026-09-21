@@ -41,7 +41,7 @@ struct ContentView: View {
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .foregroundStyle(.gray)
-                    TextField("", text: $searchText)
+                    TextField("Search place...", text: $searchText)
                         .autocorrectionDisabled(true)
                 }
                 .padding()
