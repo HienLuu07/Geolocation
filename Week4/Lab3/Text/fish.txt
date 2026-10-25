@@ -1,0 +1,6 @@
+1, "Cá Hồng Mi", 1, 15000
+2, "Cây Rong Đuôi Chó", 2, 20000
+3, "Máy lọc SOBO WP-303H", 3, 75000
+4, "TetraMin Tropical Flakes", 4, 65000
+5, "Seachem ParaGuard", 5, 150000
+6, "GEX Glassterior 300", 6, 450000
