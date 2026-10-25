@@ -1,4 +1,5 @@
 import Foundation
+
 struct Product: Identifiable {
     let id: UUID
     var name: String
