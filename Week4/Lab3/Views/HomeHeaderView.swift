@@ -1,6 +1,7 @@
 import SwiftUI
 struct HomeHeaderView: View {
     var onNotificationTap: () -> Void
+    var onAddFishTap: () -> Void
     var cartCount: Int
     var onCartTap: () -> Void
     var body: some View {
@@ -18,6 +19,11 @@ struct HomeHeaderView: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
+            Button(action: onAddFishTap) {
+                Image(systemName: "plus")
+                    .font(.title3)
+            }
+            .accessibilityLabel("Add Fish")
             Button(action: onNotificationTap) {
                 Image(systemName: "bell")
                     .font(.title3)

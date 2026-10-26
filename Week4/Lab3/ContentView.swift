@@ -7,7 +7,9 @@ struct ContentView: View {
     @State private var selectedCategory: ProductCategory? = nil
     @State private var selectedTab = 0
     @State private var showCart = false
-    @State private var products: [Product] = ProductData.products
+    @State private var showAddFish = false
+    @State private var products: [Product] = ProductFileManager.readProducts()
+    @State private var categories: [ProductCategory] = ProductFileManager.readCategories()
     @State private var searchText = ""
     @State private var cartItems: [CartItem] = []
     @State private var pendingProduct: Product?
@@ -70,6 +72,9 @@ struct ContentView: View {
             Text("Do you want to add \(pendingProduct?.name ?? "this product") to your cart?")
         }
     }
+    private func saveProducts() {
+        ProductFileManager.saveProducts(products)
+    }
     private func requestAddToCart(for product: Product) {
         pendingProduct = product
         showAddConfirmation = true
@@ -88,6 +93,9 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     HomeHeaderView(
                         onNotificationTap: {},
+                        onAddFishTap: {
+                            showAddFish = true
+                        },
                         cartCount: cartItems.reduce(0) { $0 + $1.quantity },
                         onCartTap: {
                             showCart = true
@@ -155,8 +163,12 @@ struct ContentView: View {
                             },
                             products: $products,
                             cartItems: $cartItems,
+                            categories: $categories,
                             onAddedToCart: { product in
                                 requestAddToCart(for: product)
+                            },
+                            onSaveProducts: {
+                                saveProducts()
                             }
                         )
                         Text("Featured Products")
@@ -168,6 +180,7 @@ struct ContentView: View {
                                     ProductCardView(product: product, onFavorite: {
                                         if let index = products.firstIndex(where: { $0.id == product.id }) {
                                             products[index].isFavorite.toggle()
+                                            saveProducts()
                                         }
                                     }, onAddToCart: {
                                         requestAddToCart(for: product)
@@ -208,6 +221,12 @@ struct ContentView: View {
                 .padding()
             }
             .toolbar(.hidden, for: .navigationBar)
+            .sheet(isPresented: $showAddFish) {
+                AddProductView { product in
+                    products.append(product)
+                    saveProducts()
+                }
+            }
             .navigationDestination(isPresented: $showCart) {
                 CartView(items: $cartItems, onCheckout: { items in
                     orders.append(Order(items: items))
@@ -226,9 +245,14 @@ struct ContentView: View {
                 isGrid: true,
                 products: $products,
                 cartItems: $cartItems,
+                categories: $categories,
                 onAddedToCart: { product in
                     requestAddToCart(for: product)
+                },
+                onSaveProducts: {
+                    saveProducts()
                 }
+                
             )
             .padding()
             .toolbar(.hidden, for: .navigationBar)

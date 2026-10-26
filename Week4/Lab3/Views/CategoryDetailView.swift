@@ -4,22 +4,37 @@ struct CategoryDetailView: View {
     @Binding var products: [Product]
     @Binding var cartItems: [CartItem]
     var onAddedToCart: (Product) -> Void
+    var onSaveProducts: () -> Void
+    @State private var isEditing = false
     var body: some View {
         let categoryProducts = products.filter { $0.category == category }
         ScrollView {
-            if categoryProducts.isEmpty {
-                ContentUnavailableView("No Products Yet", systemImage: "shippingbox", description: Text("Products in this category will appear here."))
-                    .padding(.top, 60)
-            } else {
+            if !categoryProducts.isEmpty {
                 LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
                     ForEach(categoryProducts) { product in
-                        ProductCardView(product: product, onFavorite: {
-                            if let index = products.firstIndex(where: { $0.id == product.id }) {
-                                products[index].isFavorite.toggle()
+                        ZStack(alignment: .topTrailing) {
+                            ProductCardView(product: product, onFavorite: {
+                                if let index = products.firstIndex(where: { $0.id == product.id }) {
+                                    products[index].isFavorite.toggle()
+                                }
+                            }, onAddToCart: {
+                                onAddedToCart(product)
+                            })
+                            if isEditing {
+                                Button(role: .destructive) {
+                                    products.removeAll { $0.id == product.id }
+                                    onSaveProducts()
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .font(.subheadline.bold())
+                                        .foregroundStyle(.white)
+                                        .frame(width: 30, height: 30)
+                                        .background(.red, in: Circle())
+                                }
+                                .buttonStyle(.plain)
+                                .padding(8)
                             }
-                        }, onAddToCart: {
-                            onAddedToCart(product)
-                        })
+                        }
                     }
                 }
                 .padding(.horizontal, 12)
@@ -27,5 +42,12 @@ struct CategoryDetailView: View {
         }
         .navigationTitle(category.rawValue)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(isEditing ? "Done" : "Edit") {
+                    isEditing.toggle()
+                }
+            }
+        }
     }
 }

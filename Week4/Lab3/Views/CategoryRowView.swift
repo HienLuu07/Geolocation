@@ -5,19 +5,21 @@ struct CategoryRowView: View {
     var isGrid = false
     @Binding var products: [Product]
     @Binding var cartItems: [CartItem]
+    @Binding var categories: [ProductCategory]
     var onAddedToCart: (Product) -> Void
+    var onSaveProducts: () -> Void
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
     var body: some View {
         if isGrid {
             LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(ProductCategory.allCases) { category in
+                ForEach(categories) { category in
                     categoryButton(category)
                 }
             }
         } else {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    ForEach(ProductCategory.allCases) { category in
+                    ForEach(categories) { category in
                         categoryButton(category)
                             .frame(width: 105, height: 105)
                     }
@@ -27,7 +29,7 @@ struct CategoryRowView: View {
     }
     private func categoryButton(_ category: ProductCategory) -> some View {
         return NavigationLink {
-            CategoryDetailView(category: category, products: $products, cartItems: $cartItems, onAddedToCart: onAddedToCart)
+            CategoryDetailView(category: category, products: $products, cartItems: $cartItems, onAddedToCart: onAddedToCart, onSaveProducts: onSaveProducts)
         } label: {
             VStack(spacing: 10) {
                 Image(systemName: category.symbol)
