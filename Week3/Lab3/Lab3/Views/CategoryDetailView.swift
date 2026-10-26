@@ -7,10 +7,7 @@ struct CategoryDetailView: View {
     var body: some View {
         let categoryProducts = products.filter { $0.category == category }
         ScrollView {
-            if categoryProducts.isEmpty {
-                ContentUnavailableView("No Products Yet", systemImage: "shippingbox", description: Text("Products in this category will appear here."))
-                    .padding(.top, 60)
-            } else {
+            if !categoryProducts.isEmpty {
                 LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
                     ForEach(categoryProducts) { product in
                         ProductCardView(product: product, onFavorite: {
